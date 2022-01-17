@@ -9,7 +9,7 @@ from pathlib import Path
 os.chdir(os.path.sep)
 Direct=[]
 FandD=[]
-def sortfile(input: Path):
+def sortfile(input: Path) -> str:
     file=[]
     index=0
     input = str(input)
@@ -28,7 +28,7 @@ def sortfile(input: Path):
         index = index + 1
 
 
-def sortdir(input: str):
+def sortdir(input: str)-> None:
     Direct=[]
     index= 0
     input= str(input)
@@ -48,22 +48,23 @@ def sortdir(input: str):
         sortdir(Direct[index2])
         index2 = index2 +1
     
-def section_1(ui: str):
+def section_1(ui: str) -> str:
     try:
-        if ui[0:2]=="D ":
+        if ui[0]=="D":
            sortfile(ui)
         else:
-            if ui[0:2]=="R ":
+            if ui[0]=="R":
                     sortdir(ui)
             else:
                 print("ERROR")
-                os.execl(sys.executable, sys.executable, *sys.argv)
-    except Exception as e:
-        print(e)
-        os.execl(sys.executable, sys.executable, *sys.argv)
+                section_1(input())
+               
+    except :
+        print("ERROR")
+        section_1(input())
 
 interesting_files=[]
-def section_2(ui2:Path):
+def section_2(ui2:Path) -> str:
     index=0
     try:
         if(ui2=="A"):
@@ -79,24 +80,24 @@ def section_2(ui2:Path):
                 index = index + 1
         if(ui2[0:2]=="E "):
             while index < len(FandD):
-                length = len(FandD) - (len(ui2)-2)
                 consid = FandD[index]
-                if(ui2[2:]==consid[length:]):
+                if(ui2[2:]==consid[-len(ui2[2:]):]):
                     print(FandD[index])
                     interesting_files.append(FandD[index])
                 index = index + 1
         if(ui2[0:2]=="T "):
             while index < len(FandD):
-                length = len(FandD[index])-4
                 consid = FandD[index]
-                if(consid[length:]==".txt"):
+                try:
                     with open(FandD[index]) as file:
-                        if ui2 in file.read():
+                        if ui2[2:] in file.read():
                             print(FandD[index])
                             interesting_files.append(FandD[index])
+                except :
+                    continue
                 index = index + 1
-        if(ui2[0:2]=="< "):
-            numbers = ui2[3:]
+        if(ui2[0]=="<"):
+            numbers = ui2[2:]
             number = int(numbers)
             while index < len(FandD):
                 size = os.path.getsize(FandD[index])
@@ -104,8 +105,8 @@ def section_2(ui2:Path):
                     print(FandD[index])
                     interesting_files.append(FandD[index])
                 index = index + 1
-        if(ui2[0:2]=="> "):
-            numbers = ui2[3:]
+        if(ui2[0]==">"):
+            numbers = ui2[2:]
             number = int(numbers)
             while index < len(FandD):
                 size = os.path.getsize(FandD[index])
@@ -116,10 +117,10 @@ def section_2(ui2:Path):
         if(len(interesting_files) == 0):
             sys.exit()
     except:
-         print("ERROR")
-         section_2(input())
+        print("ERROR")
+        section_2(input())
 
-def section3(ui3:str):
+def section3(ui3:str) -> str:
     ui3 = str(ui3)
     index = 0
     try:
@@ -150,8 +151,8 @@ def section3(ui3:str):
                         print("ERROR")
                         inputB = Path(input())
                         section3(inputB)
-    except Exception as err:
-        print(err)
+    except:
+        print("ERROR")
         section3(input())
 if __name__ == '__main__':
     input1=input()
